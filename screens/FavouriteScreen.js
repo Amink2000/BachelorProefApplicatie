@@ -1,5 +1,5 @@
 import { Text, ScrollView, StyleSheet, Button, TextInput} from 'react-native';
-import EditScreenInfo from '../components/EditScreenInfo';
+
 import React, { useState } from 'react';
 import {Picker} from '@react-native-picker/picker';
 import {useForm, Controller} from "react-hook-form"
