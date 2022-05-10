@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, StyleSheet, Text, Image, Dimensions} from 'react-native'
+import Icon1 from 'react-native-vector-icons/Ionicons';
 
 const{width, height} = Dimensions.get('window')
 const ThesisCard = ({item }) => {
@@ -7,11 +8,16 @@ const ThesisCard = ({item }) => {
     return (
         <View style={styles.cardView}>
             <Text style={styles.title}> {item.name}</Text>
-            <Text style={styles.author}>{item.fieldOfStudy} </Text>
-            <Text style={styles.author}>{item.campus} </Text>
+            <Text style={styles.company}>
+            <Icon1 name="library-outline" color="steelblue" size={14}/>
+                {item.fieldOfStudy} </Text>
+            <Text style={styles.company}>
+            <Icon1 name="location-outline" color="steelblue" size={14}/>
+                {item.campus}
+             </Text>
             {/* <Text style={styles.author}>{item.company} </Text> */}
             
-            <Text style={styles.title}>{item.description}</Text>
+            <Text style={styles.description}>{item.description}</Text>
         </View>
     )
 }
@@ -35,9 +41,9 @@ const styles = StyleSheet.create({
     },
     description:{
         marginVertical: width * 0.05,
-        marginHorizontal: width * 0.02,
+        marginHorizontal: width * 0.03,
         color: 'gray',
-        fontSize: 18
+        fontSize: 12
     },
     image:{
         height: height / 6,
@@ -47,7 +53,7 @@ const styles = StyleSheet.create({
     },
     company:{
         marginBottom: width * 0.0,
-        marginHorizontal: width * 0.05,
+        marginHorizontal: width * 0.04,
         fontSize: 15,
         color: 'gray'
 

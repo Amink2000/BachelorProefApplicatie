@@ -36,21 +36,9 @@ export default function EditScreenInfo({ path }: { path: string }) {
           lightColor="rgba(0,0,0,0.8)"
           darkColor="rgba(255,255,255,0.8)">
           
-          Mark the ones you are interested as favourite with a star.
+          After viewing the theses, go to the favourites page to save or submit your top three choices.
            
-        </Text>
-        <Text
-          style={styles.getStartedText}
-          lightColor="steelblue"
-          darkColor="rgba(255,255,255,0.8)">
-          3
-        </Text>
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-          
-           Go to the Favourites screen to submit your top three theses [before 1 April].
+        
            
 
         </Text>
@@ -58,7 +46,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
           style={styles.getStartedText}
           lightColor="steelblue"
           darkColor="rgba(255,255,255,0.8)">
-          4
+          3
         </Text>
         <Text
           style={styles.getStartedText}

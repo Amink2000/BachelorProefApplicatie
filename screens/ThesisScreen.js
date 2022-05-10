@@ -4,18 +4,10 @@ import { Text, View } from '../components/Themed';
 import { IAuthTokens, TokenRefreshRequest, applyAuthTokenInterceptor } from 'react-native-axios-jwt'
 import axios from 'axios'
 import {useState, useEffect } from 'react';
+import authAxios from '../apis/AuthApi';
 import ThesisApi from '../apis/ThesisApi';
 import ThesisCard from '../components/ThesisCard';
 import { get } from 'react-hook-form';
-
-const apiUrl = 'http://localhost:8080';
-const accesToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNSIsInJvbGUiOiJTdHVkZW50IiwiZXhwIjoxNjUyMjAxNDg1LCJpYXQiOjE2NTIxODM0ODV9.i2ymBhK-N0gfyC9P8r7N3B3B-FxX_ydeG5p3mhqt0QwvTjDFIE9OKsa6qZmQM7mOsl85_6mhuPfHnedkGQpgTQ'
-const authAxios = axios.create({
-  baseURL: apiUrl,
-  headers: {
-    Authorization : `Bearer ${accesToken}`
-  }
-})
 
 export default function FavouriteScreen({navigation}){
   const [isLoading, setLoading] = useState(true);
@@ -32,7 +24,7 @@ export default function FavouriteScreen({navigation}){
 }, []);
 
 return (
-  <SafeAreaView>
+  <SafeAreaView style={styles.container}>
             <FlatList data={data}
                 keyExtractor={(item, index) => 'key' + index}
                 renderItem={({item}) => {
@@ -40,5 +32,14 @@ return (
                 }}
             />
         </SafeAreaView>
-)
+);
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 1,
+  },
+  title: {
+    fontSize: 32,
+  },
+});
