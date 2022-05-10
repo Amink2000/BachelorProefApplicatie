@@ -1,13 +1,15 @@
-import { StyleSheet, Button, SafeAreaView} from 'react-native';
+import { StyleSheet, Button, SafeAreaView, FlatList, ActivityIndicator} from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { IAuthTokens, TokenRefreshRequest, applyAuthTokenInterceptor } from 'react-native-axios-jwt'
 import axios from 'axios'
-import { useCallback } from 'react';
+import {useState, useEffect } from 'react';
+import ThesisApi from '../apis/ThesisApi';
+import ThesisCard from '../components/ThesisCard';
+import { get } from 'react-hook-form';
 
 const apiUrl = 'http://localhost:8080';
-const accesToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNSIsInJvbGUiOiJTdHVkZW50IiwiZXhwIjoxNjUyMTI1OTc2LCJpYXQiOjE2NTIxMDc5NzZ9.uZ-hX-ob9xA5n2Alwg-beb2aW9UNAislHxPeFSksPWm6YZVmgOBz5kDI-W9-cgsE9Sr5aZ9n7BQTcc5tCZOWew'
-
+const accesToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNSIsInJvbGUiOiJTdHVkZW50IiwiZXhwIjoxNjUyMjAxNDg1LCJpYXQiOjE2NTIxODM0ODV9.i2ymBhK-N0gfyC9P8r7N3B3B-FxX_ydeG5p3mhqt0QwvTjDFIE9OKsa6qZmQM7mOsl85_6mhuPfHnedkGQpgTQ'
 const authAxios = axios.create({
   baseURL: apiUrl,
   headers: {
@@ -15,45 +17,28 @@ const authAxios = axios.create({
   }
 })
 
+export default function FavouriteScreen({navigation}){
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
 
+  useEffect(() => {
+    authAxios.get("/thesis/all")
+    .then(({ data }) => {
+        console.log("defaultApp -> data", data)
+        setData(data)
+      })
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+}, []);
 
-export default function ThesisScreen() {
-  const fetchData = useCallback(async () => {
-    try {
-      const result = await authAxios.get(`/thesis/all`);
-      setThesis(result.data);
-    } catch (err){
-      setRequestError(err.message);
-    }
-  })
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Thesis</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Button 
-      onPress={() => fetchData()}
-      title="thesis list">
-      
-      </Button>
-    </SafeAreaView>
-  );
+return (
+  <SafeAreaView>
+            <FlatList data={data}
+                keyExtractor={(item, index) => 'key' + index}
+                renderItem={({item}) => {
+                    return <ThesisCard item = {item}/>
+                }}
+            />
+        </SafeAreaView>
+)
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    borderBottomColor: 'steelblue',
-    borderBottomWidth: 1
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
