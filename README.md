@@ -20,5 +20,7 @@ react-native-gesture-handler
 
 
 3. In de terminal volgende commando's invoeren
+
 cd [path van BachelorProefApplicatie]
+
 expo start (npm start kan ook)
