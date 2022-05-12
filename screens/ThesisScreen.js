@@ -25,6 +25,9 @@ export default function FavouriteScreen({navigation}){
 
 return (
   <SafeAreaView style={styles.container}>
+    <Text style={styles.title}>
+      Full list of theses
+    </Text>
             <FlatList data={data}
                 keyExtractor={(item, index) => 'key' + index}
                 renderItem={({item}) => {
@@ -40,6 +43,12 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   title: {
-    fontSize: 32,
+    marginTop:20,
+    fontSize: 26,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'steelblue',
+    borderBottomColor: 'steelblue',
+    borderBottomWidth: 1,
   },
 });
