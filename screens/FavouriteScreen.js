@@ -6,34 +6,32 @@ import authAxios from '../apis/AuthApi';
 export default function FavouriteScreen() {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [data0, setData0] = useState([]);
   const [idStudent, setIdStudent] = useState(15);
   const [firstChoice, setFirstChoice] = useState();
   const [secondChoice, setSecondChoice] = useState();
   const [thirdChoice, setThirdChoice] = useState();
-  const [submitted, setSubmitted] = useState(false);
   const [showBox, setShowBox] = useState(true);
+  const [disable, setDisable] = useState(false);
+  const [submitted, setSubmitted] = useState("false");
 
   useEffect(() => {
     authAxios.get("/thesis/all")
     .then(({ data }) => {
-        console.log("defaultApp -> data", data)
+        //console.log("defaultApp -> data", data)
         setData(data)
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
+
 }, []);
 const renderSubjectList = () => {
   return data.map((thesis) => {
     return <Picker.Item label={thesis.name} value={thesis.id} key={thesis.id} />
   })
 }
-const preferencesData = {
-  "idStudent": 15,
-  "firstChoice": firstChoice,
-  "secondChoice": secondChoice,
-  "thirdChoice": thirdChoice,
-  "submitted": submitted
-}
+
+
 const onSubmitFormHandler = async () => {
   if (!firstChoice || !secondChoice || !thirdChoice) {
     alert("Please complete your selection.");
@@ -51,9 +49,15 @@ const onSubmitFormHandler = async () => {
       {
         text: "Yes",
         onPress: () => {
-          setSubmitted(true);
+          setDisable(true);
           setShowBox(false);
-          
+          const preferencesData = {
+            "idStudent": 15,
+            "firstChoice": firstChoice,
+            "secondChoice": secondChoice,
+            "thirdChoice": thirdChoice,
+            "submitted": true
+          }
           try {
             authAxios.post("/preferences/add", preferencesData).then(response=>{
               console.log(response)
@@ -73,7 +77,7 @@ const onSubmitFormHandler = async () => {
     ]
   );
   setLoading(true);
-  
+  setDisable(true);
   
 };
 const onSaveFormHandler = async () => {
@@ -86,7 +90,13 @@ const onSaveFormHandler = async () => {
     return;
   }
   setLoading(true);
-  
+  const preferencesData = {
+    "idStudent": 15,
+    "firstChoice": firstChoice,
+    "secondChoice": secondChoice,
+    "thirdChoice": thirdChoice,
+    "submitted": false
+  }
   try {
     authAxios.post("/preferences/add", preferencesData).then(response=>{
       console.log(response)
@@ -147,17 +157,18 @@ const onSaveFormHandler = async () => {
 
 		</Picker>
     
-        <View style={styles.fixToText}>
+        <View>
         <Button
-            title="Save"
-            onPress={onSaveFormHandler}
+            title="Save" 
             style={styles.saveButton}
-          
+            onPress={onSaveFormHandler}
+            disabled={disable}
           />
-          <Button
+          <Button 
             title="Submit"
             onPress={onSubmitFormHandler}
             style={styles.submitButton}
+            disabled={disable}
             
           />
         </View>
@@ -194,10 +205,22 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   saveButton:{
-
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: 'black',
   },
   submitButton:{
-
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: 'black',
   },
   fixToText: {
     marginTop:5,

@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Button, StyleSheet, SafeAreaView, Linking} from 'react-native';
+
+import { View, Button, StyleSheet, SafeAreaView, Linking, TouchableOpacity} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Avatar, Title, Caption, Text, TouchableRipple } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -8,8 +8,53 @@ import Navigation from '../navigation';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FavouriteScreen from './FavouriteScreen';
+import React, { useState, useEffect } from 'react';
+import authAxios from '../apis/AuthApi';
 
 export default function Profile({navigation}) {
+    const [isLoading, setLoading] = useState(true);
+    const [data, setData] = useState();
+    const [idStudent, setIdStudent] = useState(15);
+    const [profileFirstName, setProfileFirstName] = useState("");
+    const [profileLastName, setProfileLastName] = useState("");
+    const [profileCell, setProfileCell] = useState("");
+    const [profileEmail, setProfileEmail] = useState("aminkhatibi@icloud.com");
+    const [profileLocation, setProfileLocation] = useState("");
+    const [profileCampus, setProfileCampus] = useState("");
+    const [submitted, setSubmitted] = useState("No", "Yes");
+    
+
+    useEffect(() => {
+        authAxios.get("/student/all")
+        .then(({ data }) => {
+            console.log("defaultApp -> data", data)
+            setData(data)
+            setProfileCell(data[0].tel);
+            setProfileFirstName(data[0].firstName);
+            setProfileLastName(data[0].lastName);
+            setProfileCampus(data[0].campus);
+            setProfileLocation(data[0].address)
+            console.log(profileCampus)
+          })
+          .catch((error) => console.error(error))
+          .finally(() => setLoading(false));
+    }, []);
+    useEffect(() => {
+        authAxios.get("/preferences/all")
+        .then(({ data }) => {
+            console.log("defaultApp -> data", data[0])
+            setData(data)
+            if(data[0].submitted==true){
+                setSubmitted("Yes")
+            }
+            else{
+                setSubmitted("No")
+            }
+            console.log(submitted)
+          })
+          .catch((error) => console.error(error))
+          .finally(() => setLoading(false));
+    }, []);
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView> 
@@ -20,7 +65,7 @@ export default function Profile({navigation}) {
                     size={80} />
 
                     <View style={{marginLeft: 20}}>
-                        <Title style={[styles.title, {marginTop: 15, marginBottom: 5,}]}>Amin Khatibi</Title>
+                        <Title style={[styles.title, {marginTop: 15, marginBottom: 5,}]}>{profileFirstName} {profileLastName}</Title>
                         <Caption style={styles.caption}>R0743523</Caption>
                     </View>
                 </View>
@@ -28,11 +73,15 @@ export default function Profile({navigation}) {
                 <View style={[styles.userInfoSection, {marginTop: '10%', marginLeft: '-10%'}]}>
                     <View style={styles.row}>
                         <Icon name="map-marker-radius" color="steelblue" size={20} />
-                        <Text style={{color: '#777777', marginLeft: 20}}>Ghent, Belgium</Text>
+                        <TouchableOpacity onPress={() => Linking.openURL('maps://app?saddr=Mijn+Locatie&daddr='+profileLocation)}>
+                        <Text style={{color: '#777777', marginLeft: 20}}>
+                            {profileLocation}
+                        </Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.row}>
                         <Icon name="phone" color="steelblue" size={20} />
-                        <Text style={{color: '#777777', marginLeft: 20}}>+32 468 20 40 65</Text>
+                        <Text style={{color: '#777777', marginLeft: 20}}>{profileCell}</Text>
                     </View>
                     <View style={styles.row}>
                         <Icon name="email" color="steelblue" size={20} />
@@ -42,13 +91,13 @@ export default function Profile({navigation}) {
                 
                 <View style={styles.infoBoxWrapper}>
                     <View style={[styles.infoBox, {borderRightColor: '#dddddd', borderRightWidth: 1,}]}>
-                        <Title>No</Title>
+                        <Title >{submitted}</Title>
                         <Caption>Selection made</Caption>
                     </View>
                 
                     <View style={styles.infoBox}>
-                        <Title>5</Title>
-                        <Caption>Favourites</Caption>
+                        <Text style={styles.text0}>{profileCampus}</Text>
+                        <Caption>Campus</Caption>
                     </View>
                 </View>
             </View>
@@ -70,18 +119,15 @@ export default function Profile({navigation}) {
                         <Text style={styles.menuItemText}>Go to browser</Text>
                     </View>
                 </TouchableRipple>
-                <TouchableRipple onPress={() => {}}>
+                <TouchableRipple onPress={() => {
+                    alert("If you have any questions or if any problems have occurred, don't hesitate to contact your coordinator")
+                }}>
                     <View style={styles.menuItem}>
                         <Icon name="account-outline" color="steelblue" size={25}/>
                         <Text style={styles.menuItemText}>Support</Text>
                     </View>
                 </TouchableRipple>
-                <TouchableRipple onPress={() => {}}>
-                    <View style={styles.menuItem}>
-                        <Icon1 name="settings" color="steelblue" size={25}/>
-                        <Text style={styles.menuItemText}>Settings</Text>
-                    </View>
-                </TouchableRipple>
+                
             </View>
             </ScrollView>
         </SafeAreaView>
@@ -99,6 +145,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
+        color:"black"
     },
     caption: {
         fontSize: 14,
@@ -137,4 +184,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 26,
     },
+    text0:{
+        marginBottom:5,
+        marginTop:12,
+        fontSize:16
+    }
 });

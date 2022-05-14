@@ -27,7 +27,7 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'TabOne'>)
         Visit the other screens to view the possible thesis subjects and to make your choices.
         </Text>
         <Text style={styles.text2}>
-        If you don't know what steps to follow, press on <Icon1 name="information-circle" color="black" size={20}/> in the top right-hand corner.
+        If you don't know what steps to follow, press <Icon1 name="information-circle" color="black" size={20}/> in the top right-hand corner.
         </Text>
         </View>
         
