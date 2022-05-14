@@ -1,6 +1,5 @@
-import { StyleSheet, SafeAreaView, Image, ImageBackground } from 'react-native';
-
-import { Text, View } from '../components/Themed';
+import { Text, View, StyleSheet, SafeAreaView, Image, ImageBackground } from 'react-native';
+import Icon1 from 'react-native-vector-icons/Ionicons';
 import { RootTabScreenProps } from '../types';
 
 export default function HomeScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
@@ -18,6 +17,17 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'TabOne'>)
         </Text>
         <Text style={styles.subtitle}>
         KU Leuven
+        </Text>
+        </View>
+        <View style={styles.textView}>
+        <Text style={styles.text1}>
+          Welcome to the thesis platform app! 
+        </Text>
+        <Text style={styles.text2}>
+        Visit the other screens to view the possible thesis subjects and to make your choices.
+        </Text>
+        <Text style={styles.text2}>
+        If you don't know what steps to follow, press on <Icon1 name="information-circle" color="black" size={20}/> in the top right-hand corner.
         </Text>
         </View>
         
@@ -53,5 +63,22 @@ const styles = StyleSheet.create({
   background:{
     flex:1,
     resizeMode: 'cover'
+  },
+  text1:{
+    fontSize:20,
+    marginTop: 40,
+    marginLeft:17,
+    marginRight:17,
+    color:"#295D8A"
+  },
+  text2:{
+    fontSize:20,
+    marginTop: 15,
+    marginLeft:17,
+    marginRight:17,
+    color:"#295D8A"
+  },
+  textView:{
+    justifyContent:'flex-end'
   }
 });

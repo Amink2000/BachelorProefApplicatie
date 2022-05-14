@@ -36,7 +36,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
           lightColor="rgba(0,0,0,0.8)"
           darkColor="rgba(255,255,255,0.8)">
           
-          After viewing the theses, go to the favourites page to save or submit your top three choices.
+          After viewing the theses, go to the favourites page to save or submit your top three choices. 
            
         
            
