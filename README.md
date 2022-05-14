@@ -1,6 +1,18 @@
 BachelorProefApplicatie is de frontend mobiele applicatie voor de bachelorproef (6stdp.) 
 van de opleiding Industrieel ingenieur: Elektronica/ICT.
 
+De backend git: https://github.com/Lukasdewachter/bachelorproef-backend
+De website frontend git: https://github.com/Lukasdewachter/bachelorproef-frontend
+
+Volgende technologiën werden gebruikt:
+-Expo CLI
+-AndroidStudio en VSCode als IDE voor app development
+-React State
+-React Navigation
+-Axios
+
+
+
 Om deze app te openen dient men volgende stappen te volgen:
 1. Maak een nieuw expo project aan (https://docs.expo.dev/get-started/create-a-new-app/) en vervang src
 
