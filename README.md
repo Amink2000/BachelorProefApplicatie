@@ -9,11 +9,17 @@ De backend: https://github.com/Lukasdewachter/bachelorproef-backend
 De website frontend: https://github.com/Lukasdewachter/bachelorproef-frontend
 
 #### Volgende technologiën werden gebruikt:
--Expo CLI
--AndroidStudio en VSCode als IDE voor app development
--React State
--React Navigation
--Axios
+- Expo CLI
+
+- AndroidStudio en VSCode als IDE voor app development
+
+- React
+
+- React State
+
+- React Navigation
+
+- Axios
 
 
 
