@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, StyleSheet, Text, Image, Dimensions} from 'react-native'
+import { View, StyleSheet, Text, Image, Dimensions, ScrollView, TouchableOpacity, Linking} from 'react-native'
+
 import Icon1 from 'react-native-vector-icons/Ionicons';
 
 const{width, height} = Dimensions.get('window')
@@ -11,13 +12,21 @@ const ThesisCard = ({item }) => {
             <Text style={styles.company}>
             <Icon1 name="library-outline" color="steelblue" size={14}/>
                 {item.fieldOfStudy} </Text>
-            <Text style={styles.company}>
-            <Icon1 name="location-outline" color="steelblue" size={14}/>
-                {item.campus}
-             </Text>
+                <TouchableOpacity onPress={() => Linking.openURL('maps://app?saddr=Mijn+Locatie&daddr='+item.campus)}>
+                
+                        <Text style={styles.company}>
+                        <Icon1 name="location-outline" color="steelblue" size={14}/>
+                            {item.campus}
+                        </Text>
+                        </TouchableOpacity>
             {/* <Text style={styles.author}>{item.company} </Text> */}
-            
+            <ScrollView>
             <Text style={styles.description}>{item.description}</Text>
+            </ScrollView>
+            <Text style={styles.persons}>
+            <Icon1 name="people-outline" color="steelblue" size={14}/>
+                2
+                </Text>
         </View>
     )
 }
@@ -57,6 +66,12 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: 'gray'
 
+    },
+    persons:{
+        marginBottom: width * 0.02,
+        marginHorizontal: width * 0.04,
+        fontSize: 15,
+        color: 'gray'
     }
 })
 
