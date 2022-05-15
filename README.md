@@ -19,6 +19,8 @@ De website frontend: https://github.com/Lukasdewachter/bachelorproef-frontend
 
 - React Navigation
 
+- React AsyncStorage
+
 - Axios
 
 
