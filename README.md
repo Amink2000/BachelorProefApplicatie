@@ -23,6 +23,8 @@ De website frontend: https://github.com/Lukasdewachter/bachelorproef-frontend
 
 - Axios
 
+- LottieView (https://github.com/lottie-react-native/lottie-react-native)
+
 
 
 #### Om deze app te openen dient men volgende stappen te volgen:
