@@ -1,15 +1,18 @@
-import { Text, View ,ScrollView, StyleSheet, Button, TextInput, Alert} from 'react-native';
+import { Text, View ,ScrollView, StyleSheet, Button, TextInput, Alert, Modal} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import {Picker} from '@react-native-picker/picker';
 import authAxios from '../apis/AuthApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { Animated, Easing } from 'react-native';
+import LottieView from 'lottie-react-native';
+import SimpleAnimation from '../components/SubmitAnimation';
 
 export default function FavouriteScreen() {
-  let STORAGE_KEY0 = "user_disable1";
-  let STORAGE_KEY1 = "user_firstChoice1";
-  let STORAGE_KEY2 = "user_secondChoice1";
-  let STORAGE_KEY3 = "user_thirdChoice1";
+  let STORAGE_KEY0 = "user_disable5";
+  let STORAGE_KEY1 = "user_firstChoice5";
+  let STORAGE_KEY2 = "user_secondChoice5";
+  let STORAGE_KEY3 = "user_thirdChoice5";
  
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -24,7 +27,14 @@ export default function FavouriteScreen() {
   const [showBox, setShowBox] = useState(true);
   const [disable, setDisable] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
+  const [showAnimation, setShowAnimation] = useState("none");
+  const showAnimationFunction = () => {
+    if (disable==false){
+      setShowAnimation("none");
+    } else if (disable==true){
+      setShowAnimation('');
+    }
+  }
   const readItemFromStorage = async () => {
     try {
       const value0 = await AsyncStorage.getItem(STORAGE_KEY0);
@@ -90,7 +100,7 @@ const onSubmitFormHandler = async () => {
       {
         text: "Yes",
         onPress: () => {
-          
+          setDisable(true)
           writeItemToStorage(firstChoice,secondChoice,thirdChoice, true);
           
           setShowBox(false);
@@ -143,15 +153,16 @@ const onSaveFormHandler = async () => {
     "thirdChoice": thirdChoice,
     "submitted": false
   }
-  try {
-    authAxios.post("/preferences/add", preferencesData).then(response=>{
-      console.log(response)
-      //console.log(preferencesData)
-    })
-  } catch (error) {
-    console.log(error);
-    setLoading(false);
-  }
+  // try {
+  //   authAxios.post("/preferences/add", preferencesData).then(response=>{
+  //     console.log(response)
+  //     //console.log(preferencesData)
+  //   })
+  // } catch (error) {
+  //   console.log(error);
+  //   setLoading(false);
+  // }
+
   alert("Your selection has been saved, if you are sure of this selection you can submit it.")
   setLoading(false);
   
@@ -160,6 +171,8 @@ const onSaveFormHandler = async () => {
 
   return (
     <ScrollView>
+    
+       
       <Text style={styles.title}>
         Select three subjects in your top three order
       </Text>
@@ -204,7 +217,17 @@ const onSaveFormHandler = async () => {
 			{renderSubjectList()}
 
 		</Picker>
-    
+    <View>
+      {disable ? <SimpleAnimation style={styles.animation}/> : null}
+      {/* <LottieView
+        source={require("../components/lotties/submitgif.json")}
+        autoPlay
+        loop={false}
+        style={styles.animation}
+        autoSize={true}
+        resizeMode='cover' 
+      /> */}
+    </View>
         <View>
         <Button
             title="Save" 
@@ -217,13 +240,14 @@ const onSaveFormHandler = async () => {
           <Button 
             title="Submit"
             onPress={
-              () => { onSubmitFormHandler(); setDisable(true);}
+              () => { onSubmitFormHandler();}
              }
             style={styles.submitButton}
             disabled={disable}
             
           />
         </View>
+        
     </ScrollView>
     
   );
