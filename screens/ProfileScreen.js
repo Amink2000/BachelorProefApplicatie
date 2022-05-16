@@ -1,4 +1,4 @@
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Button, StyleSheet, SafeAreaView, Linking, TouchableOpacity} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Avatar, Title, Caption, Text, TouchableRipple } from 'react-native-paper';
@@ -12,6 +12,7 @@ import React, { useState, useEffect } from 'react';
 import authAxios from '../apis/AuthApi';
 
 export default function Profile({navigation}) {
+    let STORAGE_KEY0 = "user_disable";
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState();
     const [idStudent, setIdStudent] = useState(15);
@@ -21,40 +22,51 @@ export default function Profile({navigation}) {
     const [profileEmail, setProfileEmail] = useState("aminkhatibi@icloud.com");
     const [profileLocation, setProfileLocation] = useState("");
     const [profileCampus, setProfileCampus] = useState("");
+    const [profileFieldOfStudy, setProfileFieldOfStudy] = useState("");
     const [submitted, setSubmitted] = useState("No", "Yes");
+    const [disable, setDisable] = useState(disable);
     
-
+    const readItemFromStorage = async () => {
+        try {
+          const value0 = await AsyncStorage.getItem(STORAGE_KEY0);
+          
+          if (value0 !== null) {
+            setDisable(JSON.parse(value0));
+            
+            //console.log(JSON.parse(value0))
+          }
+        } catch (e) {
+          //console.log('Failed to fetch the input from storage');
+        }
+      };
+      useEffect(() => {
+        readItemFromStorage();
+        if(disable==true){
+            setSubmitted("Yes");
+        }else if(disable==false){
+            setSubmitted("No");
+        }
+        
+        
+    
+    }, []);
     useEffect(() => {
         authAxios.get("/student/all")
         .then(({ data }) => {
-            console.log("defaultApp -> data", data)
+            //console.log("defaultApp -> data", data)
             setData(data)
             setProfileCell(data[0].tel);
             setProfileFirstName(data[0].firstName);
             setProfileLastName(data[0].lastName);
             setProfileCampus(data[0].campus);
-            setProfileLocation(data[0].address)
-            console.log(profileCampus)
+            setProfileLocation(data[0].address);
+            setProfileFieldOfStudy(data[0].fieldOfStudy);
+            
           })
           .catch((error) => console.error(error))
           .finally(() => setLoading(false));
     }, []);
-    useEffect(() => {
-        authAxios.get("/preferences/all")
-        .then(({ data }) => {
-            console.log("defaultApp -> data", data[0])
-            setData(data)
-            if(data[0].submitted==true){
-                setSubmitted("Yes")
-            }
-            else{
-                setSubmitted("No")
-            }
-            console.log(submitted)
-          })
-          .catch((error) => console.error(error))
-          .finally(() => setLoading(false));
-    }, []);
+   
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView> 
@@ -91,8 +103,8 @@ export default function Profile({navigation}) {
                 
                 <View style={styles.infoBoxWrapper}>
                     <View style={[styles.infoBox, {borderRightColor: '#dddddd', borderRightWidth: 1,}]}>
-                        <Title >{submitted}</Title>
-                        <Caption>Selection made</Caption>
+                        <Text style={styles.text1}>{profileFieldOfStudy}</Text>
+                        <Caption>Field of study</Caption>
                     </View>
                 
                     <View style={styles.infoBox}>
@@ -188,5 +200,10 @@ const styles = StyleSheet.create({
         marginBottom:5,
         marginTop:12,
         fontSize:16
+    },
+    text1:{
+        marginBottom:5,
+        marginTop:12,
+        fontSize:13
     }
 });

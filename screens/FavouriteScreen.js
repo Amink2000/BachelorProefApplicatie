@@ -2,20 +2,61 @@ import { Text, View ,ScrollView, StyleSheet, Button, TextInput, Alert} from 'rea
 import React, { useState, useEffect } from 'react';
 import {Picker} from '@react-native-picker/picker';
 import authAxios from '../apis/AuthApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function FavouriteScreen() {
+  let STORAGE_KEY0 = "user_disable1";
+  let STORAGE_KEY1 = "user_firstChoice1";
+  let STORAGE_KEY2 = "user_secondChoice1";
+  let STORAGE_KEY3 = "user_thirdChoice1";
+ 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [data0, setData0] = useState([]);
   const [idStudent, setIdStudent] = useState(15);
-  const [firstChoice, setFirstChoice] = useState();
-  const [secondChoice, setSecondChoice] = useState();
-  const [thirdChoice, setThirdChoice] = useState();
+  const [firstChoice, setFirstChoice] = useState('');
+  //const { getItem1, setItem1 } = useAsyncStorage('@storage_key1');
+  const [secondChoice, setSecondChoice] = useState('');
+  //const { getItem2, setItem2 } = useAsyncStorage('@storage_key2');
+  const [thirdChoice, setThirdChoice] = useState('');
+  //const { getItem3, setItem3 } = useAsyncStorage('@storage_key3');
   const [showBox, setShowBox] = useState(true);
   const [disable, setDisable] = useState(false);
-  const [submitted, setSubmitted] = useState("false");
+  const [submitted, setSubmitted] = useState(false);
+
+  const readItemFromStorage = async () => {
+    try {
+      const value0 = await AsyncStorage.getItem(STORAGE_KEY0);
+      const value1 = await AsyncStorage.getItem(STORAGE_KEY1);
+      const value2 = await AsyncStorage.getItem(STORAGE_KEY2);
+      const value3 = await AsyncStorage.getItem(STORAGE_KEY3);
+      if (value1 !== null) {
+        setDisable(JSON.parse(value0));
+        setFirstChoice(JSON.parse(value1));
+        setSecondChoice(JSON.parse(value2));
+        setThirdChoice(JSON.parse(value3));
+        //console.log(JSON.parse(value0))
+      }
+    } catch (e) {
+      console.log('Failed to fetch the input from storage');
+    }
+  };
+
+  const writeItemToStorage = async (firstChoice, secondChoice, thirdChoice, disable) => {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY0, JSON.stringify(disable))
+      await AsyncStorage.setItem(STORAGE_KEY1, JSON.stringify(firstChoice))
+      await AsyncStorage.setItem(STORAGE_KEY2, JSON.stringify(secondChoice))
+      await AsyncStorage.setItem(STORAGE_KEY3, JSON.stringify(thirdChoice))
+      console.log(disable);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
+    readItemFromStorage();
     authAxios.get("/thesis/all")
     .then(({ data }) => {
         //console.log("defaultApp -> data", data)
@@ -49,8 +90,11 @@ const onSubmitFormHandler = async () => {
       {
         text: "Yes",
         onPress: () => {
-          setDisable(true);
+          
+          writeItemToStorage(firstChoice,secondChoice,thirdChoice, true);
+          
           setShowBox(false);
+          
           const preferencesData = {
             "idStudent": 15,
             "firstChoice": firstChoice,
@@ -61,7 +105,7 @@ const onSubmitFormHandler = async () => {
           try {
             authAxios.post("/preferences/add", preferencesData).then(response=>{
               console.log(response)
-              console.log(preferencesData)
+              //console.log(preferencesData)
             })
           } catch (error) {
             console.log(error);
@@ -76,8 +120,9 @@ const onSubmitFormHandler = async () => {
       },
     ]
   );
+  
   setLoading(true);
-  setDisable(true);
+  
   
 };
 const onSaveFormHandler = async () => {
@@ -89,6 +134,7 @@ const onSaveFormHandler = async () => {
     alert("Please select three different subjects, selecting the same subject more than once is not allowed.");
     return;
   }
+  writeItemToStorage(firstChoice,secondChoice,thirdChoice, false);
   setLoading(true);
   const preferencesData = {
     "idStudent": 15,
@@ -100,7 +146,7 @@ const onSaveFormHandler = async () => {
   try {
     authAxios.post("/preferences/add", preferencesData).then(response=>{
       console.log(response)
-      console.log(preferencesData)
+      //console.log(preferencesData)
     })
   } catch (error) {
     console.log(error);
@@ -108,6 +154,8 @@ const onSaveFormHandler = async () => {
   }
   alert("Your selection has been saved, if you are sure of this selection you can submit it.")
   setLoading(false);
+  
+  
 };
 
   return (
@@ -161,12 +209,16 @@ const onSaveFormHandler = async () => {
         <Button
             title="Save" 
             style={styles.saveButton}
-            onPress={onSaveFormHandler}
+            onPress={
+              () => { onSaveFormHandler(); }
+             }
             disabled={disable}
           />
           <Button 
             title="Submit"
-            onPress={onSubmitFormHandler}
+            onPress={
+              () => { onSubmitFormHandler(); setDisable(true);}
+             }
             style={styles.submitButton}
             disabled={disable}
             

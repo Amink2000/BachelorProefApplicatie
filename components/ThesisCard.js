@@ -9,9 +9,13 @@ const ThesisCard = ({item }) => {
     return (
         <View style={styles.cardView}>
             <Text style={styles.title}> {item.name}</Text>
+            <TouchableOpacity onPress={() => Linking.openURL(`tel:0468204065`)}>
+                
             <Text style={styles.company}>
-            <Icon1 name="library-outline" color="steelblue" size={14}/>
-                {item.fieldOfStudy} </Text>
+            <Icon1 name="call-outline" color="steelblue" size={14}/>
+                {item.promotor} </Text>
+                        </TouchableOpacity>
+            
                 <TouchableOpacity onPress={() => Linking.openURL('maps://app?saddr=Mijn+Locatie&daddr='+item.campus)}>
                 
                         <Text style={styles.company}>
@@ -25,7 +29,7 @@ const ThesisCard = ({item }) => {
             </ScrollView>
             <Text style={styles.persons}>
             <Icon1 name="people-outline" color="steelblue" size={14}/>
-                2
+                {item.numberOfPers}
                 </Text>
         </View>
     )
