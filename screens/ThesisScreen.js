@@ -9,6 +9,7 @@ import ThesisApi from '../apis/ThesisApi';
 import ThesisCard from '../components/ThesisCard';
 import { get } from 'react-hook-form';
 
+
 export default function FavouriteScreen({navigation}){
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
